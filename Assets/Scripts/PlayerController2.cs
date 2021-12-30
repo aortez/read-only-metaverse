@@ -21,4 +21,20 @@ public class PlayerController2 : MonoBehaviour
         float dy = Input.GetAxis("Vertical");
         body.AddForce(new Vector2(dx,dy) * speed);
     }
+
+    private void OnTriggerEnter2D(Collider2D collision) {
+        OnTriggerStay2D(collision);
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Neuron"))
+        {
+            Neuron n = collision.gameObject.GetComponent<Neuron>();
+            n.value = n.valueMax;
+            Debug.Log("Collided with Neuron!");
+            // count++;
+            // SetCountText();
+        }
+    }
 }

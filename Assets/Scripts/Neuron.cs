@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class Neuron : MonoBehaviour
 {
-    float valueMin = 0.0f;
-    float growth = 0.0001f;
-    float valueMax = 1.0f;
-    float value = 0.0f;
+    const float valueMin = 0.0f;
+    const float growth = 0.0001f;
+    public float valueMax = 1.0f;
+    public float value = 0.0f;
 
     public List<Synapse> outputs = new List<Synapse>();
 
     // Start is called before the first frame update.
     void Start()
     {
+        // Make init conditions random.
         value = Random.Range(valueMin, valueMax);
     }
 
@@ -24,8 +25,14 @@ public class Neuron : MonoBehaviour
         value += growth;
         if (value > valueMax) {
             if (outputs != null) {
+                float totalWeight = 0;
                 foreach (Synapse s in outputs) {
-                    float deltaV = s.strength * valueMax;
+                    totalWeight += s.weight;
+                }
+                // Debug.Log("total weight: " + totalWeight);
+                foreach (Synapse s in outputs) {
+                    s.IndicateSpiked();
+                    float deltaV = valueMax / totalWeight;
                     Debug.Log("updating s.output.value: " + s.output.value + " with deltaV: " + deltaV);
                     s.output.value += deltaV;
                 }
@@ -33,7 +40,6 @@ public class Neuron : MonoBehaviour
 
             value = valueMin;
         }
-        // Debug.Log("updated self value: " + value);
 
         // How far the node is rotated indicates how much v it has.
         float r = value * 360.0f;
@@ -49,7 +55,6 @@ public class Neuron : MonoBehaviour
         line.SetPositions(pos.ToArray());
         line.startColor = Color.green;
         line.endColor = Color.green;
-        Debug.Log("line.startColor: " + line.startColor);
         line.startWidth = 1.0f;
         line.endWidth = 1.0f;
         line.useWorldSpace = true;

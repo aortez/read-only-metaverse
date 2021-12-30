@@ -30,7 +30,7 @@ public class Network : MonoBehaviour
             neurons[i] = Instantiate(Resources.Load("Neuron")) as GameObject;
             neurons[i].transform.position = new Vector3(x, y, 0.0f);
         }
-        //
+
         // neurons = new GameObject[4];
         // neurons[0] = Instantiate(Resources.Load("Neuron")) as GameObject;
         // neurons[0].transform.position = new Vector3(-5f, -5f, 0.0f);
@@ -62,7 +62,7 @@ public class Network : MonoBehaviour
                     // DistanceJoint2D spring = neurons[i].AddComponent<DistanceJoint2D>();
                     Debug.Log("spring distance: " + spring.distance);
                     // if (spring.distance < 5) {
-                        spring.distance = 5;
+                        spring.distance = 8;
                     // }
                     spring.connectedBody = neurons[j].GetComponent<Rigidbody2D>();
                     spring.enableCollision = true;
@@ -70,10 +70,11 @@ public class Network : MonoBehaviour
                     // Then add the actual synapse.
                     GameObject s = new GameObject();
                     s = Instantiate(Resources.Load("Synapse")) as GameObject;
-                    s.GetComponent<Synapse>().strength = 0.5f;
-                    s.GetComponent<Synapse>().input = a;
-                    s.GetComponent<Synapse>().output = b;
-                    a.outputs.Add(s.GetComponent<Synapse>());
+                    Synapse synapse = s.GetComponent<Synapse>();
+                    synapse.weight = Random.Range(0.01f, 1.0f);
+                    synapse.input = a;
+                    synapse.output = b;
+                    a.outputs.Add(synapse);
                 } else {
                     Debug.Log("------ i, j, distance: " + i + ", " + j + ": " + distance);
                 }
