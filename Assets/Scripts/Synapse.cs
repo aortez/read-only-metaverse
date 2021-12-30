@@ -6,40 +6,44 @@ public class Synapse : MonoBehaviour
 {
     public float strength;
 
-    public Neuron other;
+    public Neuron input;
+    public Neuron output;
 
-    public Synapse(float strength, Neuron other) {
+    public Synapse(float strength, Neuron input, Neuron output) {
         this.strength = strength;
-        this.other = other;
+        this.input = input;
+        this.output = output;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        if (other == null) {
-            Debug.Log("+++++ created new Synapse, strength: " + strength + ", other: " + null);
+        if (output == null) {
+            Debug.Log("+++++ created new Synapse, strength: " + strength + ", output: " + null);
         }
-        Debug.Log("+++++ created new Synapse, strength: " + strength + ", other: " + other);
+        else if (input == null) {
+            Debug.Log("+++++ created new Synapse, strength: " + strength + ", input: " + null);
+        } else {
+            Debug.Log("+++++ created new Synapse, strength: " + strength + ", output: " + output);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (other != null) {
-            LineRenderer line = GetComponent<LineRenderer>();
-            Debug.Log("!!!!!!!!!!!drawing synapse!!!!!!!!!!!!");
-            // // LineRenderer l = neurons[0].AddComponent<LineRenderer>();
-            //
-            List<Vector3> pos = new List<Vector3>();
-            pos.Add(new Vector3(0, 0, 1));
-            pos.Add(other.transform.position);
-            // pos.Add(new Vector3(10, 10, 1));
-            line.startWidth = 1f;
-            line.endWidth = 1f;
-            line.SetPositions(pos.ToArray());
-            line.useWorldSpace = true;
-        } else {
-            // Debug.Log("..........");
+        if (output == null || input == null) {
+            Debug.Log("not drawing synapse!!!");
+            return;
         }
+
+        LineRenderer line = GetComponent<LineRenderer>();
+        List<Vector3> pos = new List<Vector3>();
+        // pos.Add(new Vector3(0, 0, 1));
+        pos.Add(input.transform.position);
+        pos.Add(output.transform.position);
+        line.SetPositions(pos.ToArray());
+        line.startWidth = 1.0f;
+        line.endWidth = 0.1f;
+        line.useWorldSpace = true;
     }
 }
