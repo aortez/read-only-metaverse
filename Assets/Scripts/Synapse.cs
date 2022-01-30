@@ -65,7 +65,7 @@ public class Synapse : MonoBehaviour
         line.endColor = endColor;
         if (recentSpikeCounter > 0) {
             recentSpikeCounter--;
-            Debug.Log("recentSpikeCounter: " + recentSpikeCounter + ", alpha: " + alpha + ", beta: " + beta);
+            // Debug.Log("recentSpikeCounter: " + recentSpikeCounter + ", alpha: " + alpha + ", beta: " + beta);
         }
     }
 }
