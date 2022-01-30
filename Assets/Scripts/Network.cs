@@ -15,14 +15,13 @@ public class Network : MonoBehaviour
         Debug.Log("Radius: " + neuronRadius);
 
         // Compute how many neurons will fit along each axis.
-        float dx = (neuronRadius * 4f);
-        float dy = (neuronRadius * 4f);
+        float dx = (neuronRadius * 3f);
+        float dy = (neuronRadius * 3f);
         float numX = areaBounds.size.x / dx;
         float numY = areaBounds.size.y / dy;
 
-        neurons = new GameObject[(int)numX * (int)numY];
-
         // Instantiate all the neurons.
+        neurons = new GameObject[(int)numX * (int)numY];
         for (int i = 0; i < neurons.Length; i++) {
             // Put them in random locations.
             float x = Random.Range(areaBounds.min.x, areaBounds.max.x);
@@ -50,7 +49,7 @@ public class Network : MonoBehaviour
             for (int j = i + 1; j < neurons.Length; j++) {
                 float distance = Vector3.Distance(neurons[i].transform.position, neurons[j].transform.position);
 
-                if (distance < 8) {
+                if (distance < 7) {
                     Debug.Log("++++++ i, j, distance: " + i + ", " + j + ": " + distance);
                     Debug.Log("num outputs: " + a.outputs.Count);
 
@@ -62,7 +61,7 @@ public class Network : MonoBehaviour
                     // DistanceJoint2D spring = neurons[i].AddComponent<DistanceJoint2D>();
                     Debug.Log("spring distance: " + spring.distance);
                     // if (spring.distance < 5) {
-                        spring.distance = 8;
+                        spring.distance = 5;
                     // }
                     spring.connectedBody = neurons[j].GetComponent<Rigidbody2D>();
                     spring.enableCollision = true;
@@ -92,11 +91,40 @@ public class Network : MonoBehaviour
             Debug.Log("will you quit it please?");
         }
 
-        // Don't do this, but this shows that we could do some higher end update here.
-        // It would have to the kind where coordination between all the network
-        // is needed.
-        // for (int i = 0; i < neurons.Length; i++) {
-        //     neurons[i].transform.Rotate(0, 0.0f, 1.0f);
-        // }
+        // Manually keep all neurons in bounds.
+        Bounds areaBounds = GetComponent<BoxCollider2D>().bounds;
+        for (int i = 0; i < neurons.Length; i++) {
+            GameObject n = neurons[i];
+            if (n.transform.position.x < areaBounds.min.x) {
+                n.transform.position = new Vector3(areaBounds.min.x, n.transform.position.y, 0.0f);
+            } else if (n.transform.position.x > areaBounds.max.x) {
+                n.transform.position = new Vector3(areaBounds.max.x, n.transform.position.y, 0.0f);
+            } else if (n.transform.position.y < areaBounds.min.y) {
+                n.transform.position = new Vector3(n.transform.position.x, areaBounds.min.y, 0.0f);
+            } else if (n.transform.position.y > areaBounds.max.y) {
+                n.transform.position = new Vector3(n.transform.position.x, areaBounds.max.y, 0.0f);
+            }
+            // neurons[i].transform.Rotate(0, 0.0f, 1.0f);
+        }
+
+        LineRenderer line = GetComponent<LineRenderer>();
+
+        List<Vector3> pos = new List<Vector3>();
+
+        pos.Add(new Vector3(areaBounds.min.x, areaBounds.min.y));
+        pos.Add(new Vector3(areaBounds.max.x, areaBounds.min.y));
+        pos.Add(new Vector3(areaBounds.max.x, areaBounds.max.y));
+        pos.Add(new Vector3(areaBounds.min.x, areaBounds.max.y));
+        line.SetPositions(pos.ToArray());
+
+        // line.startWidth = 1.0f;
+        // line.endWidth = 1.0f;
+
+        line.useWorldSpace = true;
+
+        Color startColor = new Color(1, 1, 1, .1f);
+        Color endColor = new Color(1, 1, 1, .1f);
+        line.startColor = startColor;
+        line.endColor = endColor;
     }
 }
