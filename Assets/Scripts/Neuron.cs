@@ -30,6 +30,35 @@ public class Neuron : MonoBehaviour
     // Update is called once per frame.
     void Update()
     {
+        CircleCollider2D collider = GetComponent<CircleCollider2D>();
+
+        LineRenderer line = GetComponent<LineRenderer>();
+
+        // Set some positions
+        Vector3[] positions = new Vector3[16];
+        float angle = 0.0f;
+        float radius = collider.radius;
+        // Reserve one for the extra line.
+        float delta_angle = (2 * Mathf.PI) / (positions.Length - 2);
+        for (int i = 0; i < positions.Length - 1; i++) {
+            positions[i] = new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, 0.0f);
+            angle += delta_angle;
+        }
+        positions[positions.Length - 1] = new Vector3(0, 0, 0.0f);
+        line.positionCount = positions.Length;
+        line.loop = true;
+
+        float spikeRatio = value / valueMax;
+        float red = 0.1f + spikeRatio;
+        float blue = 0.9f - red;
+        line.startColor = new Color(red, 0, blue, 1.0f);
+        line.endColor = new Color(red, 0, blue, 1.0f);
+        line.startWidth = 0.2f;
+        line.endWidth = 0.2f;
+        // line.startWidth = Mathf.Min(spikeRatio, 1);
+        // line.endWidth = Mathf.Min(spikeRatio, 1);
+        line.SetPositions(positions);
+
         // Primitive spike and pass it on mechanism.
         value += growth;
         if (value > valueMax) {
@@ -53,16 +82,5 @@ public class Neuron : MonoBehaviour
         // How far the node is rotated indicates how much v it has.
         float r = value * 360.0f;
         transform.eulerAngles = new Vector3(0, 0, r);
-
-        LineRenderer line = GetComponent<LineRenderer>();
-        List<Vector3> pos = new List<Vector3>();
-        pos.Add(new Vector3(transform.position.x, transform.position.y, 1));
-        pos.Add(new Vector3(transform.position.x, transform.position.y + value * 5, 1));
-        line.SetPositions(pos.ToArray());
-        line.startColor = Color.green;
-        line.endColor = Color.green;
-        line.startWidth = 1.0f;
-        line.endWidth = 1.0f;
-        line.useWorldSpace = true;
     }
 }

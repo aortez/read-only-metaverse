@@ -95,16 +95,16 @@ public class Network : MonoBehaviour
         Bounds areaBounds = GetComponent<BoxCollider2D>().bounds;
         for (int i = 0; i < neurons.Length; i++) {
             GameObject n = neurons[i];
+            float radius = n.GetComponent<CircleCollider2D>().radius;
             if (n.transform.position.x < areaBounds.min.x) {
-                n.transform.position = new Vector3(areaBounds.min.x, n.transform.position.y, 0.0f);
+                n.transform.position = new Vector3(areaBounds.min.x + radius, n.transform.position.y, 0.0f);
             } else if (n.transform.position.x > areaBounds.max.x) {
-                n.transform.position = new Vector3(areaBounds.max.x, n.transform.position.y, 0.0f);
+                n.transform.position = new Vector3(areaBounds.max.x - radius, n.transform.position.y, 0.0f);
             } else if (n.transform.position.y < areaBounds.min.y) {
-                n.transform.position = new Vector3(n.transform.position.x, areaBounds.min.y, 0.0f);
+                n.transform.position = new Vector3(n.transform.position.x, areaBounds.min.y + radius, 0.0f);
             } else if (n.transform.position.y > areaBounds.max.y) {
-                n.transform.position = new Vector3(n.transform.position.x, areaBounds.max.y, 0.0f);
+                n.transform.position = new Vector3(n.transform.position.x, areaBounds.max.y - radius, 0.0f);
             }
-            // neurons[i].transform.Rotate(0, 0.0f, 1.0f);
         }
 
         LineRenderer line = GetComponent<LineRenderer>();
@@ -116,10 +116,6 @@ public class Network : MonoBehaviour
         pos.Add(new Vector3(areaBounds.max.x, areaBounds.max.y));
         pos.Add(new Vector3(areaBounds.min.x, areaBounds.max.y));
         line.SetPositions(pos.ToArray());
-
-        // line.startWidth = 1.0f;
-        // line.endWidth = 1.0f;
-
         line.useWorldSpace = true;
 
         Color startColor = new Color(1, 1, 1, .1f);

@@ -50,7 +50,7 @@ public class Synapse : MonoBehaviour
         pos.Add(output.transform.position);
         line.SetPositions(pos.ToArray());
 
-        line.startWidth = 1.0f;
+        line.startWidth = 0.5f;
         line.endWidth = 0.1f;
 
         line.useWorldSpace = true;
@@ -59,10 +59,15 @@ public class Synapse : MonoBehaviour
         // Color endColor = new Color(1, 1, 1, .1f);
         float alpha = recentSpikeCounter / (float)recentSpikeCounterMax + 0.1f;
         float beta = 1.0f - alpha + 0.05f;
+
         Color startColor = new Color(alpha, beta, beta, alpha + 0.1f);
         Color endColor = new Color(alpha, beta, beta, alpha + 0.1f);
         line.startColor = startColor;
         line.endColor = endColor;
+
+        line.startWidth = alpha;
+        line.endWidth = 0.1f;
+
         if (recentSpikeCounter > 0) {
             recentSpikeCounter--;
             // Debug.Log("recentSpikeCounter: " + recentSpikeCounter + ", alpha: " + alpha + ", beta: " + beta);
