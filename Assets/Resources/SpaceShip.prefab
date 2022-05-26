@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 751620239022788725}
   - component: {fileID: 1372613023965657304}
+  - component: {fileID: 4363178767094816176}
   - component: {fileID: 2544342765418979175}
   - component: {fileID: 5249981648734979397}
   m_Layer: 0
@@ -64,6 +65,27 @@ PolygonCollider2D:
       - {x: -0.5877852, y: -0.80901706}
       - {x: 0.58778536, y: -0.80901694}
       - {x: 0.9510565, y: 0.30901712}
+--- !u!50 &4363178767094816176
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 199043327463031310}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 0
 --- !u!120 &2544342765418979175
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -106,8 +128,9 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: -0.5, y: -0.5, z: 0}
-  - {x: 0.5, y: 0.5, z: 0}
+  - {x: -0.5, y: -1, z: 0}
+  - {x: 0.5, y: -1, z: 0}
+  - {x: 0, y: 1, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -115,8 +138,8 @@ LineRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0
-        value: 1
+        time: 0.011144936
+        value: 0.25217387
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -162,7 +185,7 @@ LineRenderer:
     shadowBias: 0.5
     generateLightingData: 0
   m_UseWorldSpace: 0
-  m_Loop: 0
+  m_Loop: 1
 --- !u!114 &5249981648734979397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,3 +198,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ac3a63a5e29d134ba6519fb3e4b5e70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0

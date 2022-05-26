@@ -60,9 +60,9 @@ public class Network : MonoBehaviour
                     SpringJoint2D spring = neurons[i].AddComponent<SpringJoint2D>();
                     // DistanceJoint2D spring = neurons[i].AddComponent<DistanceJoint2D>();
                     Debug.Log("spring distance: " + spring.distance);
-                    // if (spring.distance < 5) {
+                    if (spring.distance < 5) {
                         spring.distance = 5;
-                    // }
+                    }
                     spring.connectedBody = neurons[j].GetComponent<Rigidbody2D>();
                     spring.enableCollision = true;
 
@@ -85,24 +85,24 @@ public class Network : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Escape))
-        {
-            Application.Quit();
-            Debug.Log("will you quit it please?");
-        }
+        // if (Input.GetKey(KeyCode.Escape))
+        // {
+        //     Application.Quit();
+        //     Debug.Log("will you quit it please?");
+        // }
 
         // Manually keep all neurons in bounds.
         Bounds areaBounds = GetComponent<BoxCollider2D>().bounds;
         for (int i = 0; i < neurons.Length; i++) {
             GameObject n = neurons[i];
             float radius = n.GetComponent<CircleCollider2D>().radius;
-            if (n.transform.position.x < areaBounds.min.x) {
+            if (n.transform.position.x - radius < areaBounds.min.x) {
                 n.transform.position = new Vector3(areaBounds.min.x + radius, n.transform.position.y, 0.0f);
-            } else if (n.transform.position.x > areaBounds.max.x) {
+            } else if (n.transform.position.x + radius > areaBounds.max.x) {
                 n.transform.position = new Vector3(areaBounds.max.x - radius, n.transform.position.y, 0.0f);
-            } else if (n.transform.position.y < areaBounds.min.y) {
+            } else if (n.transform.position.y - radius < areaBounds.min.y) {
                 n.transform.position = new Vector3(n.transform.position.x, areaBounds.min.y + radius, 0.0f);
-            } else if (n.transform.position.y > areaBounds.max.y) {
+            } else if (n.transform.position.y + radius > areaBounds.max.y) {
                 n.transform.position = new Vector3(n.transform.position.x, areaBounds.max.y - radius, 0.0f);
             }
         }

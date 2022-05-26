@@ -38,6 +38,7 @@ public class Synapse : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Debug.Log("Synapse FixedUpdate()");
         if (output == null || input == null) {
             Debug.Log("cannot draw synapse without both an input and output!!!");
             return;

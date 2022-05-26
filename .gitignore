@@ -1,0 +1,6 @@
+# Unity Editor directories:
+Library/*
+Logs/*
+Temp/*
+UserSettings/*
+
