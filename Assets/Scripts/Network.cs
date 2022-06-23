@@ -12,7 +12,7 @@ public class Network : MonoBehaviour
         Bounds areaBounds = GetComponent<BoxCollider2D>().bounds;
 
         float neuronRadius = (Resources.Load("Neuron") as GameObject).GetComponent<CircleCollider2D>().radius;
-        Debug.Log("Radius: " + neuronRadius);
+        // Debug.Log("Radius: " + neuronRadius);
 
         // Compute how many neurons will fit along each axis.
         float dx = (neuronRadius * 3f);
@@ -43,15 +43,18 @@ public class Network : MonoBehaviour
         // neurons[3] = Instantiate(Resources.Load("Neuron")) as GameObject;
         // neurons[3].transform.position = new Vector3(5f, -5f, 0.0f);
 
-        // Walk neurons and attach to other's within a given distance.
+        connectNeurons();
+    }
+
+    private void connectNeurons(){
         for (int i = 0; i < neurons.Length - 1; i++) {
             Neuron a = neurons[i].GetComponent<Neuron>();
             for (int j = i + 1; j < neurons.Length; j++) {
                 float distance = Vector3.Distance(neurons[i].transform.position, neurons[j].transform.position);
 
                 if (distance < 7) {
-                    Debug.Log("++++++ i, j, distance: " + i + ", " + j + ": " + distance);
-                    Debug.Log("num outputs: " + a.outputs.Count);
+                    // Debug.Log("++++++ i, j, distance: " + i + ", " + j + ": " + distance);
+                    // Debug.Log("num outputs: " + a.outputs.Count);
 
                     // Create a synapse between the neurons...
                     Neuron b = neurons[j].GetComponent<Neuron>();
@@ -59,7 +62,7 @@ public class Network : MonoBehaviour
                     // First create a spring to hold the game objects together.
                     SpringJoint2D spring = neurons[i].AddComponent<SpringJoint2D>();
                     // DistanceJoint2D spring = neurons[i].AddComponent<DistanceJoint2D>();
-                    Debug.Log("spring distance: " + spring.distance);
+                    // Debug.Log("spring distance: " + spring.distance);
                     if (spring.distance < 5) {
                         spring.distance = 5;
                     }
@@ -75,10 +78,10 @@ public class Network : MonoBehaviour
                     synapse.output = b;
                     a.outputs.Add(synapse);
                 } else {
-                    Debug.Log("------ i, j, distance: " + i + ", " + j + ": " + distance);
+                    // Debug.Log("------ i, j, distance: " + i + ", " + j + ": " + distance);
                 }
             }
-            Debug.Log("num outputs: " + a.outputs.Count);
+            // Debug.Log("num outputs: " + a.outputs.Count);
         }
     }
 

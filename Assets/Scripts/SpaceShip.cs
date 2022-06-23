@@ -5,25 +5,23 @@ using UnityEngine.InputSystem;
 
 public class SpaceShip : MonoBehaviour
 {
-    public float speed;
-
-    public InputAction fireAction;
-
     private Rigidbody2D body;
+
+    // The space ship sees the world through this texture.
+    public RenderTexture view;
+
+    public Network network;
 
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
 
-        fireAction = new InputAction(binding: "<Keyboard>/keyW");
-        fireAction.Enable();
+        // fireAction = new InputAction(binding: "<Keyboard>/keyW");
+        // fireAction.Enable();
 
-        fireAction.started += context => Debug.Log($"{context.action} started");
-        fireAction.performed += context => Debug.Log($"{context.action} performed");
-        fireAction.canceled += context => Debug.Log($"{context.action} canceled");
-
-        // Base the PolygonCollider2D off of the LineRenderer path?
-        // Might be able to find this code with little searching.
+        // fireAction.started += context => Debug.Log($"{context.action} started");
+        // fireAction.performed += context => Debug.Log($"{context.action} performed");
+        // fireAction.canceled += context => Debug.Log($"{context.action} canceled");
     }
 
     public void Fire(InputAction.CallbackContext context)
@@ -47,11 +45,38 @@ public class SpaceShip : MonoBehaviour
         if (Keyboard.current.dKey.isPressed) {
             body.AddTorque(-Time.deltaTime * rotationForce, ForceMode2D.Impulse);
         }
+
+        // Need to connect each input pixel to a neuron in the network.
+        // network.
+    }
+
+    public Texture2D toTexture2D(RenderTexture rTex)
+    {
+        Texture2D dest = new Texture2D(rTex.width, rTex.height, TextureFormat.RGBA32, false);
+        dest.Apply(false);
+        Graphics.CopyTexture(rTex, dest);
+        return dest;
     }
 
     // Update is called once per frame
     void Update()
     {
+        Texture2D view2d = toTexture2D(view);
+
+        // Grab pixels and lets look at em.
+        Color [] pixels = view2d.GetPixels(0);
+        
+        Debug.Log("num pixels: " + pixels.Length);
+        float average = 0;
+        for (int y = 0; y < view2d.height; y++) {
+            for (int x = 0; x < view2d.width; x++) {
+                Color c = pixels[y * view2d.width + x];
+                average += c.g;
+            }
+        }
+        Debug.Log("average grayscale: " + average);
+
+
         LineRenderer line = GetComponent<LineRenderer>();
         // Set some positions
         // Vector3[] positions = new Vector3[16];

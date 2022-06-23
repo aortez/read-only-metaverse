@@ -56,8 +56,6 @@ public class Synapse : MonoBehaviour
 
         line.useWorldSpace = true;
 
-        // Color startColor = new Color(1, 1, 1, .1f);
-        // Color endColor = new Color(1, 1, 1, .1f);
         float alpha = recentSpikeCounter / (float)recentSpikeCounterMax + 0.1f;
         float beta = 1.0f - alpha + 0.05f;
 

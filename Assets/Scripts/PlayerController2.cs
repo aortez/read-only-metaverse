@@ -14,23 +14,6 @@ public class PlayerController2 : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Debug.Log("PlayerController2 FixedUpdate()");
-        // var keyboard = Keyboard.current;
-        // if (keyboard == null) {
-        //      Debug.Log("no keyboard detected");
-        //      return;
-        // } else {
-        //     Debug.Log("yes keyboard detected");
-        //     if(keyboard.anyKey.wasPressedThisFrame)
-        //     {
-        //            Debug.Log("A key was pressed");
-        //     }
-        // }
-
-        // if (Input.GetKeyDown(KeyCode.Space)) {
-        //     Debug.Log("Space was pressed!");
-        // }
-        //
         // float dx = Input.GetAxis("Horizontal");
         // float dy = Input.GetAxis("Vertical");
         // body.AddForce(new Vector2(dx,dy) * Time.deltaTime * 1000);
