@@ -26,12 +26,9 @@ public class Synapse : MonoBehaviour
     void Start()
     {
         if (output == null) {
-            Debug.Log("+++++ created new Synapse, weight: " + weight + ", output: " + null);
-        }
-        else if (input == null) {
-            Debug.Log("+++++ created new Synapse, weight: " + weight + ", input: " + null);
-        } else {
-            Debug.Log("+++++ created new Synapse, weight: " + weight + ", output: " + output);
+            Debug.Log("created new Synapse with null output");
+        } else if (input == null) {
+            Debug.Log("created new Synapse with null input");
         }
     }
 

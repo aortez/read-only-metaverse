@@ -10,9 +10,9 @@ public class SpaceShip : MonoBehaviour
 
     public Network network;
 
-    private bool isNetworkConnected = false;
+    private Neuron[,] visionNeurons;
 
-    private Neuron n;
+    private bool networkIsInitialized = false;
 
     void Start()
     {
@@ -57,27 +57,43 @@ public class SpaceShip : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!isNetworkConnected) {
-            n = network.AddNeuron();
-            isNetworkConnected = true;
+        var view2d = toTexture2D(view);
+        
+        // Set up the network with one neuron per input pixel.
+        if (!networkIsInitialized)
+        {
+            visionNeurons = network.CreateInputLayer(view2d.width, view2d.height);
+            // Resize network to match aspect ratio of camera view.
+        //     // Create a single neuron for each pixel.
+        //     // Return the list of neurons and we'll save it as input neurons.
+        //     n = network.AddNeuron();
+            networkIsInitialized = true;
         }
 
-        // Grab pixels and lets look at em.
-        Texture2D view2d = toTexture2D(view);
-        Color [] pixels = view2d.GetPixels(0);
+        if (visionNeurons != null)
+        {
+            var pixels = view2d.GetPixels(0);
 
-        // Debug.Log("num pixels: " + pixels.Length);
-        float average = 0;
-        for (int y = 0; y < view2d.height; y++) {
-            for (int x = 0; x < view2d.width; x++) {
-                Color c = pixels[y * view2d.width + x];
-                average += c.g;
+            // Debug.Log("num pixels: " + pixels.Length);
+            float average = 0;
+            for (var y = 0; y < view2d.height; y++)
+            {
+                for (var x = 0; x < view2d.width; x++)
+                {
+                    var c = pixels[y * view2d.width + x];
+                    var potential = c.g * 0.01f;
+                    visionNeurons[x,y].AddPotential(potential);
+                }
             }
+
+            average /= pixels.Length;
+            average *= 0.01f;
         }
-        average /= pixels.Length;
-        average *= 0.01f;
-        if (n != null) { n.AddPotential(average); }
-        Debug.Log("average green: " + average);
+
+        // {
+        //     n.AddPotential(average);
+        // }
+        // Debug.Log("average green: " + average);
 
         LineRenderer line = GetComponent<LineRenderer>();
         // Set some positions
