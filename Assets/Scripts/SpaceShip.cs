@@ -24,11 +24,6 @@ public class SpaceShip : MonoBehaviour
         // fireAction.canceled += context => Debug.Log($"{context.action} canceled");
     }
 
-    public void Fire(InputAction.CallbackContext context)
-    {
-        Debug.Log("Fire!");
-    }
-
     void FixedUpdate()
     {
         float rotationForce = 4;
