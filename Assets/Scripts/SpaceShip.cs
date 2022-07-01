@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,6 +9,10 @@ public class SpaceShip : MonoBehaviour
     public RenderTexture view;
 
     public Network network;
+
+    private bool isNetworkConnected = false;
+
+    private Neuron n;
 
     void Start()
     {
@@ -40,28 +42,31 @@ public class SpaceShip : MonoBehaviour
         if (Keyboard.current.dKey.isPressed) {
             body.AddTorque(-Time.deltaTime * rotationForce, ForceMode2D.Impulse);
         }
-
-        // Need to connect each input pixel to a neuron in the network.
-        // network.
     }
 
     public Texture2D toTexture2D(RenderTexture rTex)
     {
-        Texture2D dest = new Texture2D(rTex.width, rTex.height, TextureFormat.RGBA32, false);
-        dest.Apply(false);
-        Graphics.CopyTexture(rTex, dest);
-        return dest;
+        Texture2D view2d = new Texture2D(rTex.width, rTex.height, TextureFormat.RGB24, false);
+
+        RenderTexture.active = rTex;
+        view2d.ReadPixels(new Rect(0, 0, rTex.width, rTex.height), 0, 0);
+        view2d.Apply();
+        return view2d;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Texture2D view2d = toTexture2D(view);
+        if (!isNetworkConnected) {
+            n = network.AddNeuron();
+            isNetworkConnected = true;
+        }
 
         // Grab pixels and lets look at em.
+        Texture2D view2d = toTexture2D(view);
         Color [] pixels = view2d.GetPixels(0);
-        
-        Debug.Log("num pixels: " + pixels.Length);
+
+        // Debug.Log("num pixels: " + pixels.Length);
         float average = 0;
         for (int y = 0; y < view2d.height; y++) {
             for (int x = 0; x < view2d.width; x++) {
@@ -69,8 +74,10 @@ public class SpaceShip : MonoBehaviour
                 average += c.g;
             }
         }
-        Debug.Log("average grayscale: " + average);
-
+        average /= pixels.Length;
+        average *= 0.01f;
+        if (n != null) { n.AddPotential(average); }
+        Debug.Log("average green: " + average);
 
         LineRenderer line = GetComponent<LineRenderer>();
         // Set some positions

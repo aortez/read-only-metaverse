@@ -27,6 +27,10 @@ public class Neuron : MonoBehaviour
         // }
     }
 
+    public void AddPotential(float p) {
+        value += p;
+    }
+
     // Update is called once per frame.
     void Update()
     {

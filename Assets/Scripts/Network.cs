@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using System;
+
 public class Network : MonoBehaviour
 {
     public GameObject[] neurons;
@@ -15,8 +17,8 @@ public class Network : MonoBehaviour
         // Debug.Log("Radius: " + neuronRadius);
 
         // Compute how many neurons will fit along each axis.
-        float dx = (neuronRadius * 3f);
-        float dy = (neuronRadius * 3f);
+        float dx = (neuronRadius * 4f);
+        float dy = (neuronRadius * 4f);
         float numX = areaBounds.size.x / dx;
         float numY = areaBounds.size.y / dy;
 
@@ -24,8 +26,8 @@ public class Network : MonoBehaviour
         neurons = new GameObject[(int)numX * (int)numY];
         for (int i = 0; i < neurons.Length; i++) {
             // Put them in random locations.
-            float x = Random.Range(areaBounds.min.x, areaBounds.max.x);
-            float y = Random.Range(areaBounds.min.y, areaBounds.max.y);
+            float x = UnityEngine.Random.Range(areaBounds.min.x, areaBounds.max.x);
+            float y = UnityEngine.Random.Range(areaBounds.min.y, areaBounds.max.y);
             neurons[i] = Instantiate(Resources.Load("Neuron")) as GameObject;
             neurons[i].transform.position = new Vector3(x, y, 0.0f);
         }
@@ -33,26 +35,88 @@ public class Network : MonoBehaviour
         // neurons = new GameObject[4];
         // neurons[0] = Instantiate(Resources.Load("Neuron")) as GameObject;
         // neurons[0].transform.position = new Vector3(-5f, -5f, 0.0f);
-        //
+        
         // neurons[1] = Instantiate(Resources.Load("Neuron")) as GameObject;
         // neurons[1].transform.position = new Vector3(-5f, 5f, 0.0f);
-        //
+        
         // neurons[2] = Instantiate(Resources.Load("Neuron")) as GameObject;
         // neurons[2].transform.position = new Vector3(5f, 5f, 0.0f);
-        //
+        
         // neurons[3] = Instantiate(Resources.Load("Neuron")) as GameObject;
         // neurons[3].transform.position = new Vector3(5f, -5f, 0.0f);
 
-        connectNeurons();
+        ConnectNeurons();
     }
 
-    private void connectNeurons(){
+    public Neuron AddNeuron() {
+        Bounds areaBounds = GetComponent<BoxCollider2D>().bounds;
+
+        float x = UnityEngine.Random.Range(areaBounds.min.x, areaBounds.max.x);
+        float y = UnityEngine.Random.Range(areaBounds.min.y, areaBounds.max.y);
+
+        Array.Resize(ref neurons, neurons.Length + 1);
+        neurons[neurons.Length - 1] = Instantiate(Resources.Load("Neuron")) as GameObject;
+        neurons[neurons.Length - 1].transform.position = new Vector3(x, y, 0.0f);
+
+        Neuron n = neurons[neurons.Length - 1].GetComponent<Neuron>();
+        
+        connectNeuronToNeighbors(n);
+        
+        return n;
+    }
+
+    private void connectNeuronToNeighbors(Neuron n) {
+        for (int i = 0; i < neurons.Length; i++)
+        {
+            Neuron b = neurons[i].GetComponent<Neuron>();
+            Debug.Log("hi");
+            if (n == b) {
+                continue;
+            }
+            Debug.Log("hi");
+
+            float distance = Vector3.Distance(n.transform.position, b.transform.position);
+            if (distance < 70)
+            {
+                Debug.Log("++++++ i, distance: " + i + ", " + distance);
+                // Debug.Log("num outputs: " + a.outputs.Count);
+
+                // Create a synapse between the neurons...
+
+                // First create a spring to hold the game objects together.
+                SpringJoint2D spring = neurons[i].AddComponent<SpringJoint2D>();
+                // DistanceJoint2D spring = neurons[i].AddComponent<DistanceJoint2D>();
+                // Debug.Log("spring distance: " + spring.distance);
+                if (spring.distance < 5)
+                {
+                    spring.distance = 5;
+                }
+                spring.connectedBody = neurons[i].GetComponent<Rigidbody2D>();
+                spring.enableCollision = true;
+
+                // Then add the actual synapse.
+                GameObject s = new GameObject();
+                s = Instantiate(Resources.Load("Synapse")) as GameObject;
+                Synapse synapse = s.GetComponent<Synapse>();
+                synapse.weight = UnityEngine.Random.Range(0.01f, 1.0f);
+                synapse.input = n;
+                synapse.output = b;
+                n.outputs.Add(synapse);
+            }
+            else
+            {
+                Debug.Log("------- i, distance: " + i + ", " + distance);
+            }
+        }
+    }
+
+    public void ConnectNeurons(){
         for (int i = 0; i < neurons.Length - 1; i++) {
             Neuron a = neurons[i].GetComponent<Neuron>();
             for (int j = i + 1; j < neurons.Length; j++) {
                 float distance = Vector3.Distance(neurons[i].transform.position, neurons[j].transform.position);
 
-                if (distance < 7) {
+                if (distance < 70) {
                     // Debug.Log("++++++ i, j, distance: " + i + ", " + j + ": " + distance);
                     // Debug.Log("num outputs: " + a.outputs.Count);
 
@@ -73,7 +137,7 @@ public class Network : MonoBehaviour
                     GameObject s = new GameObject();
                     s = Instantiate(Resources.Load("Synapse")) as GameObject;
                     Synapse synapse = s.GetComponent<Synapse>();
-                    synapse.weight = Random.Range(0.01f, 1.0f);
+                    synapse.weight = UnityEngine.Random.Range(0.01f, 1.0f);
                     synapse.input = a;
                     synapse.output = b;
                     a.outputs.Add(synapse);
